@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="referrer" content="no-referrer">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+    <meta name="description" content="以丝线轨迹探索艾德莱斯绸的五道传统制作工艺。">
+    <title>丝路成绸｜艾德莱斯绸工艺</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <canvas id="silk-trail" aria-hidden="true"></canvas>
+
+    <main id="app">
+      <section id="intro" class="screen intro is-active" aria-labelledby="intro-title">
+        <p class="eyebrow">ATLAS · SILK CRAFT</p>
+        <h1 id="intro-title">丝路成绸</h1>
+        <p class="intro-copy">沿着一缕丝的踪迹，走过艾德莱斯绸的五道工艺。</p>
+        <button id="start-button" class="ink-button" type="button">开始循丝</button>
+        <p class="interaction-hint">移动鼠标或手指，让丝线留在纸上</p>
+      </section>
+
+      <section id="experience" class="screen experience" aria-label="艾德莱斯绸制作流程">
+        <header class="experience-header">
+          <div>
+            <p class="eyebrow">艾德莱斯绸 · 五道工艺</p>
+            <p id="step-counter" class="step-counter" aria-live="polite">01 / 05</p>
+          </div>
+          <div id="progress" class="progress" aria-hidden="true"></div>
+        </header>
+
+        <p id="stage-instruction" class="stage-instruction">轻触眼前的工艺图案，继续循丝</p>
+
+        <div id="process-area" class="process-area">
+          <button id="process-button" class="process-button" type="button" aria-label="查看当前工艺">
+            <span id="process-number" class="process-number">壹</span>
+            <img id="process-image" alt="" draggable="false">
+          </button>
+        </div>
+
+        <div id="name-reveal" class="name-reveal" role="status" aria-live="polite">
+          <span id="name-number" class="name-number"></span>
+          <h2 id="name-text"></h2>
+        </div>
+      </section>
+
+      <section id="recap" class="screen recap" aria-labelledby="recap-title">
+        <p class="eyebrow">FROM COCOON TO SILK</p>
+        <h2 id="recap-title">一缕丝，五道工艺</h2>
+        <p class="recap-copy">从蚕茧到织机，艾德莱斯绸在手的往复中显出纹样。</p>
+        <ol id="process-strip" class="process-strip"></ol>
+        <button id="restart-button" class="ink-button" type="button">重新循丝</button>
+      </section>
+    </main>
+
+    <noscript>请启用 JavaScript 以体验艾德莱斯绸制作流程。</noscript>
+  </body>
+</html>
