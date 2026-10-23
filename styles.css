@@ -25,12 +25,7 @@ body {
   min-height: 100svh;
   overflow: hidden;
   color: var(--ink);
-  background:
-    radial-gradient(circle at 17% 28%, rgb(255 255 255 / 68%) 0 1px, transparent 2px),
-    radial-gradient(circle at 76% 63%, rgb(92 68 40 / 7%) 0 0.7px, transparent 1.8px),
-    repeating-linear-gradient(98deg, transparent 0 7px, rgb(78 61 39 / 1.7%) 8px, transparent 10px),
-    linear-gradient(132deg, #faf7ee, var(--paper) 48%, var(--paper-deep));
-  background-size: 31px 29px, 23px 27px, auto, auto;
+  background: var(--paper) url("assets/paper-background.jpg") center / cover no-repeat fixed;
 }
 
 body::before,
@@ -43,7 +38,7 @@ body::after {
 }
 
 body::before {
-  opacity: 0.34;
+  opacity: 0.16;
   background:
     repeating-linear-gradient(3deg, transparent 0 4px, rgb(54 45 32 / 2.2%) 5px, transparent 6px),
     repeating-linear-gradient(92deg, transparent 0 11px, rgb(255 255 255 / 18%) 12px, transparent 15px);
@@ -228,19 +223,22 @@ button:focus-visible {
 .process-area {
   position: relative;
   min-height: 0;
+  margin-inline: clamp(3.5rem, 8vw, 9rem);
 }
 
 .process-button {
   position: absolute;
   z-index: 5;
   display: none;
-  width: min(66vw, 880px);
+  width: min(var(--process-width, 28vw), 64vw);
+  aspect-ratio: var(--process-aspect, auto);
   max-height: 72vh;
   padding: 0;
   border: 0;
   color: var(--ink);
   background: transparent;
   cursor: pointer;
+  overflow: hidden;
   opacity: 0;
   filter: blur(9px);
   transform: scale(0.985) rotate(var(--tilt, 0deg));
@@ -259,23 +257,45 @@ button:focus-visible {
   transform: scale(1.04) rotate(var(--tilt, 0deg));
 }
 
-.process-button img {
+.process-media {
+  position: absolute;
+  top: 0;
+  left: 0;
   display: block;
-  width: 100%;
-  max-height: 68vh;
+  width: var(--media-width, 100%);
+  max-height: none;
   object-fit: contain;
   user-select: none;
+  transform: translateY(var(--media-y, 0%));
   filter: saturate(0.88) contrast(0.95);
   mix-blend-mode: multiply;
   -webkit-mask-image: radial-gradient(ellipse 82% 76% at center, #000 44%, rgb(0 0 0 / 88%) 65%, transparent 100%);
   mask-image: radial-gradient(ellipse 82% 76% at center, #000 44%, rgb(0 0 0 / 88%) 65%, transparent 100%);
 }
 
+.process-media[hidden] {
+  display: none;
+}
+
+.process-button video {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  mix-blend-mode: multiply;
+  transform: none;
+}
+
+.transparent-art {
+  -webkit-mask-image: none !important;
+  mask-image: none !important;
+}
+
 .process-button:focus-visible {
   outline: none;
 }
 
-.process-button:focus-visible img {
+.process-button:focus-visible .process-media {
   filter: saturate(0.88) contrast(0.95) drop-shadow(0 0 0.55rem rgb(204 130 110 / 55%));
 }
 
@@ -360,7 +380,7 @@ button:focus-visible {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: clamp(0.4rem, 1.4vw, 1.3rem);
-  width: min(94vw, 1320px);
+  width: min(82vw, 1320px);
   margin: 0.7rem 0 1.6rem;
   padding: 0;
   list-style: none;
@@ -383,7 +403,8 @@ button:focus-visible {
   transform: translateX(0);
 }
 
-.recap-item img {
+.recap-item img,
+.recap-item video {
   width: 100%;
   height: 100%;
   object-fit: contain;
@@ -444,7 +465,11 @@ noscript {
   }
 
   .process-button {
-    width: min(88vw, 680px);
+    width: min(var(--process-width, 62vw), 68vw);
+  }
+
+  .process-area {
+    margin-inline: 5vw;
   }
 
   .process-strip {

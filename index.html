@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="referrer" content="no-referrer">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; media-src 'self'; style-src 'self'; script-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
     <meta name="description" content="以丝线轨迹探索艾德莱斯绸的五道传统制作工艺。">
     <title>丝路成绸｜艾德莱斯绸工艺</title>
     <link rel="stylesheet" href="styles.css">
@@ -36,7 +36,8 @@
         <div id="process-area" class="process-area">
           <button id="process-button" class="process-button" type="button" aria-label="查看当前工艺">
             <span id="process-number" class="process-number">壹</span>
-            <img id="process-image" alt="" draggable="false">
+            <img id="process-image" class="process-media" alt="" draggable="false">
+            <video id="process-video" class="process-media" muted loop autoplay playsinline preload="auto" hidden></video>
           </button>
         </div>
 
