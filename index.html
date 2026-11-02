@@ -4,58 +4,66 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="referrer" content="no-referrer">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; media-src 'self'; style-src 'self'; script-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
-    <meta name="description" content="以丝线轨迹探索艾德莱斯绸的五道传统制作工艺。">
-    <title>丝路成绸｜艾德莱斯绸工艺</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+    <meta name="description" content="以拖拽和丝线轨迹探索艾德莱斯绸九道制作工序与四类传统纹样。">
+    <title>艾德莱斯绸｜技艺与纹样</title>
     <link rel="stylesheet" href="styles.css">
     <script src="script.js" defer></script>
   </head>
   <body>
     <canvas id="silk-trail" aria-hidden="true"></canvas>
 
-    <main id="app">
-      <section id="intro" class="screen intro is-active" aria-labelledby="intro-title">
-        <p class="eyebrow">ATLAS · SILK CRAFT</p>
-        <h1 id="intro-title">丝路成绸</h1>
-        <p class="intro-copy">沿着一缕丝的踪迹，走过艾德莱斯绸的五道工艺。</p>
-        <button id="start-button" class="ink-button" type="button">开始循丝</button>
-        <p class="interaction-hint">移动鼠标或手指，让丝线留在纸上</p>
-      </section>
-
-      <section id="experience" class="screen experience" aria-label="艾德莱斯绸制作流程">
-        <header class="experience-header">
-          <div>
-            <p class="eyebrow">艾德莱斯绸 · 五道工艺</p>
-            <p id="step-counter" class="step-counter" aria-live="polite">01 / 05</p>
+    <main>
+      <section id="story" class="panel story" aria-label="艾德莱斯绸制作流程">
+        <div id="home-screen" class="story-layer home-screen is-active">
+          <div class="media-frame">
+            <img src="assets/v3/home.png" alt="艾德莱斯绸织机与织锦" draggable="false">
+            <button id="enter-story" class="intro-card" type="button" aria-label="拖动或点击，开始探索制作流程">
+              <span class="intro-line" aria-hidden="true"></span>
+              <span class="intro-diamond intro-diamond-red" aria-hidden="true"></span>
+              <span class="intro-diamond intro-diamond-blue" aria-hidden="true"></span>
+              <span class="intro-diamond intro-diamond-paper" aria-hidden="true"></span>
+            </button>
+            <p class="home-hint">拖动卡片，循丝而行 <span>DRAG TO EXPLORE</span></p>
           </div>
-          <div id="progress" class="progress" aria-hidden="true"></div>
-        </header>
-
-        <p id="stage-instruction" class="stage-instruction">轻触眼前的工艺图案，继续循丝</p>
-
-        <div id="process-area" class="process-area">
-          <button id="process-button" class="process-button" type="button" aria-label="查看当前工艺">
-            <span id="process-number" class="process-number">壹</span>
-            <img id="process-image" class="process-media" alt="" draggable="false">
-            <video id="process-video" class="process-media" muted loop autoplay playsinline preload="auto" hidden></video>
-          </button>
         </div>
 
-        <div id="name-reveal" class="name-reveal" role="status" aria-live="polite">
-          <span id="name-number" class="name-number"></span>
-          <h2 id="name-text"></h2>
+        <div id="slider-screen" class="story-layer slider-screen" aria-hidden="true">
+          <div id="process-track" class="process-track"></div>
+          <div class="slide-caption" aria-live="polite">
+            <span id="slide-number">01</span>
+            <span id="slide-name">煮茧抽丝</span>
+            <span class="slide-instruction">拖拽探索 <b>DRAG TO EXPLORE</b></span>
+          </div>
+          <div id="slide-dots" class="slide-dots" aria-hidden="true"></div>
+        </div>
+
+        <div id="completion" class="completion" role="dialog" aria-modal="true" aria-labelledby="completion-title" hidden>
+          <div class="completion-card">
+            <img src="assets/v3/process-card.png" alt="艾德莱斯绸制作九道工序总览">
+            <h2 id="completion-title" class="visually-hidden">艾德莱斯绸制作九道工序</h2>
+            <button id="close-completion" class="close-completion" type="button" aria-label="关闭并返回首页">×</button>
+          </div>
         </div>
       </section>
 
-      <section id="recap" class="screen recap" aria-labelledby="recap-title">
-        <p class="eyebrow">FROM COCOON TO SILK</p>
-        <h2 id="recap-title">一缕丝，五道工艺</h2>
-        <p class="recap-copy">从蚕茧到织机，艾德莱斯绸在手的往复中显出纹样。</p>
-        <ol id="process-strip" class="process-strip"></ol>
-        <button id="restart-button" class="ink-button" type="button">重新循丝</button>
+      <section id="patterns-hero" class="panel image-panel" aria-label="艾德莱斯纹样四大类别">
+        <div class="media-frame">
+          <img src="assets/v3/patterns-hero.png" alt="艾德莱斯纹样，器物纹、植物纹、几何纹、自然纹四类卡片" loading="lazy" draggable="false">
+        </div>
+      </section>
+
+      <section id="pattern-archive" class="panel image-panel pattern-archive" aria-label="艾德莱斯纹样档案交互卡片">
+        <div id="archive-frame" class="media-frame archive-frame">
+          <img id="archive-image" src="assets/v3/patterns-base.png" alt="四类艾德莱斯纹样档案卡片" loading="lazy" draggable="false">
+          <button class="pattern-hotspot pattern-one" type="button" data-pattern="1" aria-label="突出显示器物纹"></button>
+          <button class="pattern-hotspot pattern-two" type="button" data-pattern="2" aria-label="突出显示植物纹"></button>
+          <button class="pattern-hotspot pattern-three" type="button" data-pattern="3" aria-label="突出显示几何纹"></button>
+          <button class="pattern-hotspot pattern-four" type="button" data-pattern="4" aria-label="突出显示自然纹"></button>
+        </div>
       </section>
     </main>
 
-    <noscript>请启用 JavaScript 以体验艾德莱斯绸制作流程。</noscript>
+    <noscript>请启用 JavaScript，以拖拽浏览完整制作流程并体验纹样卡片。</noscript>
   </body>
 </html>
