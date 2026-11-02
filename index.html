@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="referrer" content="no-referrer">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
-    <meta name="description" content="以拖拽和丝线轨迹探索艾德莱斯绸九道制作工序与四类传统纹样。">
+    <meta name="description" content="轻触织机上的红蓝丝绸，以拖拽和丝线轨迹探索艾德莱斯绸九道工序与四类纹样。">
     <title>艾德莱斯绸｜技艺与纹样</title>
     <link rel="stylesheet" href="styles.css">
     <script src="script.js" defer></script>
@@ -16,26 +16,38 @@
     <main>
       <section id="story" class="panel story" aria-label="艾德莱斯绸制作流程">
         <div id="home-screen" class="story-layer home-screen is-active">
-          <div class="media-frame">
-            <img src="assets/v3/home.png" alt="艾德莱斯绸织机与织锦" draggable="false">
-            <button id="enter-story" class="intro-card" type="button" aria-label="拖动或点击，开始探索制作流程">
-              <span class="intro-line" aria-hidden="true"></span>
-              <span class="intro-diamond intro-diamond-red" aria-hidden="true"></span>
-              <span class="intro-diamond intro-diamond-blue" aria-hidden="true"></span>
-              <span class="intro-diamond intro-diamond-paper" aria-hidden="true"></span>
-            </button>
-            <p class="home-hint">拖动卡片，循丝而行 <span>DRAG TO EXPLORE</span></p>
+          <div class="home-stage">
+            <img class="home-background" src="assets/v4/home-bg.png" alt="艾德莱斯绸交互首页" draggable="false">
+            <div class="loom-wrap">
+              <img class="loom-animation" src="assets/v4/loom.gif" alt="织机循环织出红蓝艾德莱斯绸" draggable="false">
+              <button class="fabric-trigger fabric-trigger-top" type="button" aria-label="轻触红蓝丝绸，打开制作工序卡片"></button>
+              <button class="fabric-trigger fabric-trigger-bottom" type="button" aria-label="轻触织出的红蓝丝绸，打开制作工序卡片"></button>
+            </div>
+            <p class="home-hint">轻触织出的红蓝丝绸 <span>TOUCH THE WOVEN SILK</span></p>
           </div>
         </div>
 
         <div id="slider-screen" class="story-layer slider-screen" aria-hidden="true">
-          <div id="process-track" class="process-track"></div>
-          <div class="slide-caption" aria-live="polite">
-            <span id="slide-number">01</span>
-            <span id="slide-name">煮茧抽丝</span>
-            <span class="slide-instruction">拖拽探索 <b>DRAG TO EXPLORE</b></span>
+          <div class="story-dimmer" aria-hidden="true"></div>
+          <div id="transition-card" class="transition-card" hidden aria-hidden="true">
+            <span class="transition-line"></span>
+            <span class="transition-diamond transition-diamond-red"></span>
+            <span class="transition-diamond transition-diamond-blue"></span>
+            <span class="transition-diamond transition-diamond-paper"></span>
           </div>
-          <div id="slide-dots" class="slide-dots" aria-hidden="true"></div>
+
+          <div id="deck-shell" class="deck-shell" aria-label="九道制作工序拖拽卡片">
+            <img class="deck-background" src="assets/v4/deck-bg.png" alt="工序卡片纸张底板" draggable="false">
+            <div class="deck-window">
+              <div id="process-track" class="process-track"></div>
+            </div>
+            <div class="slide-caption" aria-live="polite">
+              <span id="slide-number">01 / 09</span>
+              <span id="slide-name">煮茧抽丝</span>
+              <span class="slide-instruction">向左拖动 <b>DRAG LEFT</b></span>
+            </div>
+            <div id="slide-dots" class="slide-dots" aria-hidden="true"></div>
+          </div>
         </div>
 
         <div id="completion" class="completion" role="dialog" aria-modal="true" aria-labelledby="completion-title" hidden>
@@ -47,15 +59,9 @@
         </div>
       </section>
 
-      <section id="patterns-hero" class="panel image-panel" aria-label="艾德莱斯纹样四大类别">
-        <div class="media-frame">
-          <img src="assets/v3/patterns-hero.png" alt="艾德莱斯纹样，器物纹、植物纹、几何纹、自然纹四类卡片" loading="lazy" draggable="false">
-        </div>
-      </section>
-
-      <section id="pattern-archive" class="panel image-panel pattern-archive" aria-label="艾德莱斯纹样档案交互卡片">
-        <div id="archive-frame" class="media-frame archive-frame">
-          <img id="archive-image" src="assets/v3/patterns-base.png" alt="四类艾德莱斯纹样档案卡片" loading="lazy" draggable="false">
+      <section id="pattern-page" class="panel pattern-page" aria-label="艾德莱斯纹样四大类别">
+        <div id="pattern-frame" class="pattern-frame">
+          <img id="pattern-image" src="assets/v4/patterns-1.png" alt="艾德莱斯纹样：器物纹、植物纹、几何纹、自然纹" loading="lazy" draggable="false">
           <button class="pattern-hotspot pattern-one" type="button" data-pattern="1" aria-label="突出显示器物纹"></button>
           <button class="pattern-hotspot pattern-two" type="button" data-pattern="2" aria-label="突出显示植物纹"></button>
           <button class="pattern-hotspot pattern-three" type="button" data-pattern="3" aria-label="突出显示几何纹"></button>
@@ -64,6 +70,6 @@
       </section>
     </main>
 
-    <noscript>请启用 JavaScript，以拖拽浏览完整制作流程并体验纹样卡片。</noscript>
+    <noscript>请启用 JavaScript，以拖拽浏览制作流程并体验纹样卡片。</noscript>
   </body>
 </html>

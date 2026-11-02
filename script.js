@@ -2,36 +2,35 @@
   "use strict";
 
   const processSteps = [
-    ["煮茧抽丝", "assets/v3/process-1.png"],
-    ["并丝、卷丝、分线", "assets/v3/process-2.png"],
-    ["图案设计", "assets/v3/process-3.png"],
-    ["扎经防染", "assets/v3/process-4.png"],
-    ["分层染色", "assets/v3/process-5.png"],
-    ["解扎、水洗、晾干", "assets/v3/process-6.png"],
-    ["整经、对花、穿综", "assets/v3/process-7.png"],
-    ["上机织造", "assets/v3/process-8.png"],
-    ["整理、验收", "assets/v3/process-9.png"]
+    ["煮茧抽丝", "assets/v4/process-1.png"],
+    ["并丝、卷丝、分线", "assets/v4/process-2.png"],
+    ["图案设计", "assets/v4/process-3.png"],
+    ["扎经防染", "assets/v4/process-4.png"],
+    ["分层染色", "assets/v4/process-5.png"],
+    ["解扎、水洗、晾干", "assets/v4/process-6.png"],
+    ["整经、对花、穿综", "assets/v4/process-7.png"],
+    ["上机织造", "assets/v4/process-8.png"],
+    ["整理、验收", "assets/v4/process-9.png"]
   ];
 
   const patternSources = {
-    1: "assets/v3/patterns-focus-1.png",
-    2: "assets/v3/patterns-focus-2.png",
-    3: "assets/v3/patterns-focus-3.png",
-    4: "assets/v3/patterns-focus-4.png"
+    1: "assets/v4/patterns-1.png",
+    2: "assets/v4/patterns-2.png",
+    3: "assets/v4/patterns-3.png",
+    4: "assets/v4/patterns-4.png"
   };
 
-  const basePatternSource = "assets/v3/patterns-base.png";
-  const homeScreen = document.querySelector("#home-screen");
   const sliderScreen = document.querySelector("#slider-screen");
-  const enterStory = document.querySelector("#enter-story");
+  const transitionCard = document.querySelector("#transition-card");
+  const deckShell = document.querySelector("#deck-shell");
   const processTrack = document.querySelector("#process-track");
   const slideNumber = document.querySelector("#slide-number");
   const slideName = document.querySelector("#slide-name");
   const slideDots = document.querySelector("#slide-dots");
   const completion = document.querySelector("#completion");
   const closeCompletion = document.querySelector("#close-completion");
-  const archiveFrame = document.querySelector("#archive-frame");
-  const archiveImage = document.querySelector("#archive-image");
+  const patternFrame = document.querySelector("#pattern-frame");
+  const patternImage = document.querySelector("#pattern-image");
   const canvas = document.querySelector("#silk-trail");
   const context = canvas.getContext("2d");
 
@@ -40,8 +39,8 @@
   let dragStartX = null;
   let dragOffset = 0;
   let dragging = false;
-  let lastIntroDrag = 0;
   let finalTimer = 0;
+  let transitionTimers = [];
   let trailActive = false;
   let lastTrailPoint = null;
   const trailPoints = [];
@@ -71,32 +70,19 @@
     preload.src = source;
   });
 
+  const deckWidth = () => deckShell.getBoundingClientRect().width || window.innerWidth * 0.9;
+
   const setTrackPosition = (offset = 0, animate = true) => {
     processTrack.style.transition = animate ? "" : "none";
-    processTrack.style.transform = `translate3d(calc(${-currentSlide * 100}vw + ${offset}px), 0, 0)`;
+    processTrack.style.transform = `translate3d(${-currentSlide * deckWidth() + offset}px, 0, 0)`;
   };
 
   const updateSlideStatus = () => {
-    slideNumber.textContent = String(currentSlide + 1).padStart(2, "0");
+    slideNumber.textContent = `${String(currentSlide + 1).padStart(2, "0")} / 09`;
     slideName.textContent = processSteps[currentSlide][0];
     [...slideDots.children].forEach((dot, index) => {
       dot.classList.toggle("is-current", index === currentSlide);
     });
-  };
-
-  const scheduleCompletion = () => {
-    window.clearTimeout(finalTimer);
-    if (currentSlide !== processSteps.length - 1) return;
-    finalTimer = window.setTimeout(showCompletion, 1800);
-  };
-
-  const goToSlide = (index) => {
-    window.clearTimeout(finalTimer);
-    currentSlide = Math.max(0, Math.min(processSteps.length - 1, index));
-    dragOffset = 0;
-    setTrackPosition(0, true);
-    updateSlideStatus();
-    scheduleCompletion();
   };
 
   const setTrailActive = (active) => {
@@ -104,21 +90,6 @@
     trailPoints.length = 0;
     lastTrailPoint = null;
     if (!active) context.clearRect(0, 0, window.innerWidth, window.innerHeight);
-  };
-
-  const startStory = () => {
-    if (storyStarted) return;
-    storyStarted = true;
-    enterStory.classList.add("is-leaving");
-    window.setTimeout(() => {
-      homeScreen.classList.remove("is-active");
-      sliderScreen.classList.add("is-active");
-      sliderScreen.setAttribute("aria-hidden", "false");
-      currentSlide = 0;
-      setTrackPosition(0, false);
-      updateSlideStatus();
-      setTrailActive(true);
-    }, 300);
   };
 
   function showCompletion() {
@@ -130,67 +101,86 @@
     window.setTimeout(() => closeCompletion.focus({ preventScroll: true }), 340);
   }
 
-  const resetStory = () => {
-    completion.classList.remove("is-visible");
-    window.setTimeout(() => {
-      completion.hidden = true;
-    }, 300);
-    storyStarted = false;
-    currentSlide = 0;
-    dragOffset = 0;
-    setTrailActive(false);
-    sliderScreen.classList.remove("is-active");
-    sliderScreen.setAttribute("aria-hidden", "true");
-    homeScreen.classList.add("is-active");
-    enterStory.classList.remove("is-leaving");
-    enterStory.style.setProperty("--intro-x", "0px");
-    updateSlideStatus();
-    document.querySelector("#story").scrollIntoView({ behavior: "smooth" });
-    window.setTimeout(() => enterStory.focus({ preventScroll: true }), 360);
-  };
-
-  enterStory.addEventListener("pointerdown", (event) => {
-    if (event.button !== 0) return;
-    dragStartX = event.clientX;
-    dragOffset = 0;
-    enterStory.setPointerCapture(event.pointerId);
-  });
-
-  enterStory.addEventListener("pointermove", (event) => {
-    if (dragStartX === null) return;
-    dragOffset = event.clientX - dragStartX;
-    enterStory.style.setProperty("--intro-x", `${dragOffset}px`);
-  });
-
-  const finishIntroDrag = (event) => {
-    if (dragStartX === null) return;
-    if (enterStory.hasPointerCapture(event.pointerId)) enterStory.releasePointerCapture(event.pointerId);
-    const moved = Math.abs(dragOffset);
-    dragStartX = null;
-    enterStory.style.setProperty("--intro-x", "0px");
-    if (moved >= 48) {
-      lastIntroDrag = performance.now();
-      startStory();
+  const scheduleCompletion = () => {
+    window.clearTimeout(finalTimer);
+    if (currentSlide === processSteps.length - 1) {
+      finalTimer = window.setTimeout(showCompletion, 1800);
     }
   };
 
-  enterStory.addEventListener("pointerup", finishIntroDrag);
-  enterStory.addEventListener("pointercancel", finishIntroDrag);
-  enterStory.addEventListener("click", () => {
-    if (performance.now() - lastIntroDrag > 400) startStory();
+  const goToSlide = (index) => {
+    window.clearTimeout(finalTimer);
+    currentSlide = Math.max(0, Math.min(processSteps.length - 1, index));
+    dragOffset = 0;
+    setTrackPosition(0, true);
+    updateSlideStatus();
+    scheduleCompletion();
+  };
+
+  const clearTransitionTimers = () => {
+    transitionTimers.forEach((timer) => window.clearTimeout(timer));
+    transitionTimers = [];
+  };
+
+  const startStory = () => {
+    if (storyStarted) return;
+    storyStarted = true;
+    clearTransitionTimers();
+    currentSlide = 0;
+    updateSlideStatus();
+    setTrackPosition(0, false);
+    deckShell.classList.remove("is-visible");
+    transitionCard.className = "transition-card";
+    transitionCard.hidden = false;
+    sliderScreen.classList.add("is-active");
+    sliderScreen.setAttribute("aria-hidden", "false");
+
+    requestAnimationFrame(() => transitionCard.classList.add("is-visible"));
+    transitionTimers.push(window.setTimeout(() => transitionCard.classList.add("is-opening"), 620));
+    transitionTimers.push(window.setTimeout(() => {
+      transitionCard.hidden = true;
+      transitionCard.className = "transition-card";
+      deckShell.classList.add("is-visible");
+      setTrackPosition(0, false);
+      setTrailActive(true);
+    }, 1120));
+  };
+
+  const resetStory = () => {
+    clearTransitionTimers();
+    window.clearTimeout(finalTimer);
+    completion.classList.remove("is-visible");
+    window.setTimeout(() => { completion.hidden = true; }, 280);
+    storyStarted = false;
+    currentSlide = 0;
+    dragOffset = 0;
+    dragging = false;
+    setTrailActive(false);
+    deckShell.classList.remove("is-visible");
+    transitionCard.hidden = true;
+    transitionCard.className = "transition-card";
+    sliderScreen.classList.remove("is-active", "is-dragging");
+    sliderScreen.setAttribute("aria-hidden", "true");
+    updateSlideStatus();
+    document.querySelector("#story").scrollIntoView({ behavior: "smooth" });
+    window.setTimeout(() => document.querySelector(".fabric-trigger-bottom").focus({ preventScroll: true }), 340);
+  };
+
+  document.querySelectorAll(".fabric-trigger").forEach((trigger) => {
+    trigger.addEventListener("click", startStory);
   });
 
-  sliderScreen.addEventListener("pointerdown", (event) => {
-    if (event.button !== 0 || !completion.hidden) return;
+  deckShell.addEventListener("pointerdown", (event) => {
+    if (event.button !== 0 || !completion.hidden || !deckShell.classList.contains("is-visible")) return;
     window.clearTimeout(finalTimer);
     dragStartX = event.clientX;
     dragOffset = 0;
     dragging = true;
     sliderScreen.classList.add("is-dragging");
-    sliderScreen.setPointerCapture(event.pointerId);
+    deckShell.setPointerCapture(event.pointerId);
   });
 
-  sliderScreen.addEventListener("pointermove", (event) => {
+  deckShell.addEventListener("pointermove", (event) => {
     if (!dragging || dragStartX === null) return;
     dragOffset = event.clientX - dragStartX;
     if ((currentSlide === 0 && dragOffset > 0) || (currentSlide === processSteps.length - 1 && dragOffset < 0)) {
@@ -201,12 +191,12 @@
 
   const finishSlideDrag = (event) => {
     if (!dragging || dragStartX === null) return;
-    if (sliderScreen.hasPointerCapture(event.pointerId)) sliderScreen.releasePointerCapture(event.pointerId);
+    if (deckShell.hasPointerCapture(event.pointerId)) deckShell.releasePointerCapture(event.pointerId);
     dragging = false;
     dragStartX = null;
     sliderScreen.classList.remove("is-dragging");
 
-    const threshold = Math.min(110, window.innerWidth * 0.12);
+    const threshold = Math.min(105, deckWidth() * 0.13);
     if (dragOffset <= -threshold) {
       if (currentSlide === processSteps.length - 1) showCompletion();
       else goToSlide(currentSlide + 1);
@@ -219,8 +209,8 @@
     dragOffset = 0;
   };
 
-  sliderScreen.addEventListener("pointerup", finishSlideDrag);
-  sliderScreen.addEventListener("pointercancel", finishSlideDrag);
+  deckShell.addEventListener("pointerup", finishSlideDrag);
+  deckShell.addEventListener("pointercancel", finishSlideDrag);
 
   closeCompletion.addEventListener("click", resetStory);
   completion.addEventListener("click", (event) => {
@@ -232,7 +222,7 @@
       resetStory();
       return;
     }
-    if (!storyStarted || !completion.hidden) return;
+    if (!storyStarted || !completion.hidden || !deckShell.classList.contains("is-visible")) return;
     if (event.key === "ArrowRight") {
       event.preventDefault();
       currentSlide === processSteps.length - 1 ? showCompletion() : goToSlide(currentSlide + 1);
@@ -245,15 +235,15 @@
 
   let patternSwapToken = 0;
   const showPattern = (pattern) => {
-    const source = pattern ? patternSources[pattern] : basePatternSource;
-    if (archiveImage.getAttribute("src") === source) return;
+    const source = patternSources[pattern] || patternSources[1];
+    if (patternImage.getAttribute("src") === source) return;
     const token = ++patternSwapToken;
-    archiveImage.classList.add("is-changing");
+    patternImage.classList.add("is-changing");
     window.setTimeout(() => {
       if (token !== patternSwapToken) return;
-      archiveImage.src = source;
-      archiveImage.classList.remove("is-changing");
-    }, 70);
+      patternImage.src = source;
+      patternImage.classList.remove("is-changing");
+    }, 55);
   };
 
   document.querySelectorAll(".pattern-hotspot").forEach((hotspot) => {
@@ -261,9 +251,8 @@
     hotspot.addEventListener("pointerenter", () => showPattern(pattern));
     hotspot.addEventListener("focus", () => showPattern(pattern));
     hotspot.addEventListener("click", () => showPattern(pattern));
-    hotspot.addEventListener("blur", () => showPattern(null));
   });
-  archiveFrame.addEventListener("pointerleave", () => showPattern(null));
+  patternFrame.addEventListener("pointerleave", () => showPattern(1));
 
   const resizeCanvas = () => {
     const ratio = Math.min(window.devicePixelRatio || 1, 2);
